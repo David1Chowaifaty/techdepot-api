@@ -25,3 +25,31 @@ export async function  GetSingleProduct(connection:Connection , id:number):Promi
     })
     
 }
+
+export async function  GetProductByCategory(connection:Connection , category:string):Promise<any>{
+
+    return new Promise ((resolve, reject)=>{
+      connection.query("select * from Product where category= ?" , [category], (err,res)=>{
+        if(err){
+            reject(err)
+        }
+        resolve(res)
+      })
+    })
+    
+}
+
+
+
+export async function  GetProductByCategoryAndPrice(connection:Connection , category:string , price :number):Promise<any>{
+
+    return new Promise ((resolve, reject)=>{
+      connection.query("select * from Product where category= ? and price < ?" , [category, price], (err,res)=>{
+        if(err){
+            reject(err)
+        }
+        resolve(res)
+      })
+    })
+    
+}
