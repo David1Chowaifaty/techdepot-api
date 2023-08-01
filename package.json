@@ -4,11 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
     "dev": "nodemon src/app.ts",
-=======
-    "dev":"nodemon src/app.ts",
->>>>>>> georgio
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
