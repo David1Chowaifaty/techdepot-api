@@ -33,7 +33,11 @@ export async function  GetSingleProduct(connection:Connection , id:number):Promi
 export async function  GetProductByCategoryAndPrice(connection:Connection , category:string , price :number):Promise<any>{
 
     return new Promise ((resolve, reject)=>{
-      connection.query("select * from Product where category= ? and price < ?" , [category, price], (err,res)=>{
+      connection.query(`Select p.* , Cast(COALESCE(AVG(r.rating), 0) as Float) as rating 
+      from Product p 
+      Left JOIN  Rating r  On r.product_id = p.product_id
+      where category=? And price < ? 
+      group by product_id ; ` , [category, price], (err,res)=>{
         if(err){
             reject(err)
         }
@@ -42,3 +46,5 @@ export async function  GetProductByCategoryAndPrice(connection:Connection , cate
     })
     
 }
+
+
