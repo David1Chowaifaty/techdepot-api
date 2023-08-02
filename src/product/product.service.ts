@@ -1,4 +1,6 @@
+import { error } from "console";
 import { Connection } from "mysql2";
+
 
 export interface Rating {
   counter: number;
@@ -103,3 +105,49 @@ export async function RateAProduct(
     );
   });
 }
+
+
+
+export async function AddProduct (connection:Connection, quantity:number ,category:string , price:number ,discount : number , product_name :string ){
+return new Promise((resolve,reject)=>{
+  connection.query("insert into Product (quantity , category , price , discount ,product_name ) values (?,?,?,?,?)",[quantity,category,price,discount,product_name] , (error , _)=>{
+    if(error){
+      reject(error);
+    }
+    resolve("success")
+
+  })
+
+})
+
+}
+
+export async function DeleteProduct(connection:Connection , product_id:number){
+  return new Promise((resolve,reject)=>{
+    connection.query("Delete from Product where product_id =?",[product_id] , (error, _)=>{
+      if(error){
+       reject(error);
+      }
+      resolve("sucess");
+
+    })
+
+  })
+}
+
+export async function UpdateProduct(connection:Connection , product_id:number , quantity:number , category:string , price:number , discount:number,product_name:string){
+  return new Promise((resolve,reject)=>{
+    connection.query(`update Product
+     set quantity= ?  , category= ? , price = ?  ,  discount = ? , product_name = ? 
+     where product_id = ?` , 
+     [quantity,category,price,discount,product_name, product_id] , (error,_)=>{
+      if(error){
+        reject(error);
+      }
+      resolve("success")
+
+     }
+     )
+  })
+}
+ 

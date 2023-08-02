@@ -1,7 +1,8 @@
 import {Response , Request} from "express"
 import {Connection} from "mysql2"
-import { GetAllCategories, GetProductByCategoryAndPrice, GetSingleProduct, RateAProduct } from "./product.service";
+import { AddProduct, DeleteProduct, GetAllCategories, GetProductByCategoryAndPrice, GetSingleProduct, RateAProduct, UpdateProduct } from "./product.service";
 import { ZodError, z } from "zod";
+
 
 export async  function getAllCategories(req: Request,res: Response ){
     try {
@@ -83,4 +84,89 @@ export async function rateAProduct(req: Request ,res: Response){
         res.status(500).send(error)
         
     }
+}
+
+
+export async function addProduct(req: Request, res:Response){
+    try {
+        const productSheme = z.object({
+            quantity:z.coerce.number(),
+            category :z.string(),
+            price :z.coerce.number(),
+            discount:z.coerce.number(),
+            product_name :z.string()
+        })
+
+        let {quantity , category , price  , discount , product_name}=productSheme.parse(req.body);
+
+    const connection:Connection = req.app.get("connection")
+
+    const result = await AddProduct(connection ,quantity , category , price  , discount , product_name );
+    res.send("sucess");
+     
+    } catch (error) {
+
+        if(error instanceof ZodError){
+            res.status(405).send(error)
+        }
+        res.status(500).send(error)
+        
+    }
+
+}
+
+export async function deleteProduct(req:Request,res:Response){
+    try {
+      const  product_scheme=z.object({
+        product_id : z.coerce.number(),
+
+        })
+        let {product_id}= product_scheme.parse(req.params)
+        const connection:Connection = req.app.get("connection")
+        const result = await DeleteProduct(connection , product_id)
+        res.send(result)
+        
+    } catch (error) {
+        if(error instanceof ZodError){
+            res.status(405).send(error)
+        }
+        else {
+            res.status(500).send(error)
+        }
+       
+        
+    }
+
+}
+
+
+export async function updateProduct(req:Request,res:Response){
+    try {
+        const productSheme = z.object({
+            product_id :z.coerce.number(),
+            quantity:z.coerce.number(),
+            category :z.string(),
+            price :z.coerce.number(),
+            discount:z.coerce.number(),
+            product_name :z.string()
+        })
+        let {product_id , quantity , category , price  , discount , product_name}=productSheme.parse(req.body)
+        const connection:Connection= req.app.get("connection")
+        const result = await UpdateProduct(connection , product_id ,quantity ,category , price , discount ,product_name )
+        res.send(result)
+
+
+        
+        
+    } catch (error) {
+        if (error instanceof ZodError){
+            res.status(405).send(error)
+        }
+        else{
+            res.status(500).send(error)
+        }
+        
+        
+    }
+
 }
