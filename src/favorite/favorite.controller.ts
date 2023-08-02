@@ -17,7 +17,7 @@ export async function addToFavorite(req: Request, res: Response) {
     let { product_id, user_id } = favoriteProductScheme.parse(req.body);
     const connection: Connection = req.app.get("connection");
     let result = await AddToFavorite(connection, user_id, product_id);
-    res.send(result);
+    res.status(201).send(result);
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(400).send(error);
@@ -36,7 +36,7 @@ export async function removeFromFavorite(req: Request, res: Response) {
     let { favorite_id } = favoriteProductScheme.parse(req.params);
     const connection: Connection = req.app.get("connection");
     let result = await RemoveFromFavorite(connection, favorite_id);
-    res.send(result);
+    res.status(204).send(result);
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(400).send(error);

@@ -65,7 +65,7 @@ export async function register(req: Request, res: Response) {
       firstname,
       lastname
     );
-    res.send("success");
+    res.status(201).send("success");
   } catch (error) {
     if (error instanceof ZodError) {
       res.status(400).send(error);
