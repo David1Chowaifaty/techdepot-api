@@ -4,15 +4,6 @@ import { ZodError, z } from "zod";
 import { Login, Register } from "./auth.service";
 import { AuthError } from "./AuthError";
 import jwt from "jsonwebtoken";
-export function getAllUsers(req: Request, res: Response) {
-  const connection: Connection = req.app.get("connection");
-  connection.query("select * from Users", (err, result) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.send(result);
-  });
-}
 export async function login(req: Request, res: Response) {
   try {
     const loginSchema = z.object({

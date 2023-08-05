@@ -1,7 +1,6 @@
 import { error } from "console";
 import { Connection } from "mysql2";
 
-
 export interface Rating {
   counter: number;
 }
@@ -15,6 +14,25 @@ export async function GetAllCategories(connection: Connection): Promise<any> {
 
       resolve(res);
     });
+  });
+}
+export async function GetAllProducts(
+  connection: Connection,
+  limit: number,
+  offset: number
+): Promise<any> {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "Select * from Product LIMIT ? OFFSET ?",
+      [limit, offset],
+      (err, res) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(res);
+      }
+    );
   });
 }
 export async function GetSingleProduct(
@@ -69,7 +87,7 @@ export async function RateAProduct(
       [user_id, product_id],
       (selectError, selectResult) => {
         if (selectError) {
-          console.log(selectError)
+          console.log(selectError);
           reject(selectError);
         } else {
           const res = selectResult as Rating[];
@@ -80,9 +98,8 @@ export async function RateAProduct(
               [user_id, product_id, rating],
               (error, result) => {
                 if (error) {
-                  console.log(error)
+                  console.log(error);
                   reject(error);
-                  
                 }
                 resolve("success");
               }
@@ -93,7 +110,7 @@ export async function RateAProduct(
               [rating, user_id, product_id],
               (error, result) => {
                 if (error) {
-                  console.log(error)
+                  console.log(error);
                   reject(error);
                 }
                 resolve("success");
@@ -106,48 +123,67 @@ export async function RateAProduct(
   });
 }
 
-
-
-export async function AddProduct (connection:Connection, quantity:number ,category:string , price:number ,discount : number , product_name :string ){
-return new Promise((resolve,reject)=>{
-  connection.query("insert into Product (quantity , category , price , discount ,product_name ) values (?,?,?,?,?)",[quantity,category,price,discount,product_name] , (error , _)=>{
-    if(error){
-      reject(error);
-    }
-    resolve("success")
-
-  })
-
-})
-
-}
-
-export async function DeleteProduct(connection:Connection , product_id:number){
-  return new Promise((resolve,reject)=>{
-    connection.query("Delete from Product where product_id =?",[product_id] , (error, _)=>{
-      if(error){
-       reject(error);
+export async function AddProduct(
+  connection: Connection,
+  quantity: number,
+  category: string,
+  price: number,
+  discount: number,
+  product_name: string
+) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "insert into Product (quantity , category , price , discount ,product_name ) values (?,?,?,?,?)",
+      [quantity, category, price, discount, product_name],
+      (error, _) => {
+        if (error) {
+          reject(error);
+        }
+        resolve("success");
       }
-      resolve("sucess");
-
-    })
-
-  })
+    );
+  });
 }
 
-export async function UpdateProduct(connection:Connection , product_id:number , quantity:number , category:string , price:number , discount:number,product_name:string){
-  return new Promise((resolve,reject)=>{
-    connection.query(`update Product
+export async function DeleteProduct(
+  connection: Connection,
+  product_id: number
+) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "Delete from Product where product_id =?",
+      [product_id],
+      (error, _) => {
+        if (error) {
+          reject(error);
+        }
+        resolve("sucess");
+      }
+    );
+  });
+}
+
+export async function UpdateProduct(
+  connection: Connection,
+  product_id: number,
+  quantity: number,
+  category: string,
+  price: number,
+  discount: number,
+  product_name: string
+) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `update Product
      set quantity= ?  , category= ? , price = ?  ,  discount = ? , product_name = ? 
-     where product_id = ?` , 
-     [quantity,category,price,discount,product_name, product_id] , (error,_)=>{
-      if(error){
-        reject(error);
+     where product_id = ?`,
+      [quantity, category, price, discount, product_name, product_id],
+      (error, _) => {
+        if (error) {
+          reject(error);
+        }
+        resolve("success");
       }
-      resolve("success")
-
-     }
-     )
-  })
+    );
+  });
 }
- 
