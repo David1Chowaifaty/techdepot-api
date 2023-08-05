@@ -4,12 +4,14 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import mysql from "mysql2";
 import { router } from "./routes";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app: Express = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 const connection = mysql.createConnection(process.env.DATABASE_URL || "");
 
 app.set("connection", connection);

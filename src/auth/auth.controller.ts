@@ -3,6 +3,7 @@ import { Connection } from "mysql2";
 import { ZodError, z } from "zod";
 import { Login, Register } from "./auth.service";
 import { AuthError } from "./AuthError";
+import jwt from "jsonwebtoken";
 export function getAllUsers(req: Request, res: Response) {
   const connection: Connection = req.app.get("connection");
   connection.query("select * from Users", (err, result) => {
@@ -32,7 +33,19 @@ export async function login(req: Request, res: Response) {
       lastname: string;
       email: string;
       password: string;
+      role: "user";
     };
+    const token = jwt.sign(
+      { user_id, firstname, lastname, email, role: "user" },
+      process.env.TOKEN_SECRET!,
+      { expiresIn: "1800s" }
+    );
+    res.cookie("auth-token", token, {
+      maxAge: 3600000,
+      path: "/",
+      secure: false,
+      domain: "localhost",
+    });
     res.send({ user_id, firstname, lastname, email });
   } catch (error) {
     if (error instanceof ZodError) {
