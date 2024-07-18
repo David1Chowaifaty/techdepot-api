@@ -2,5 +2,6 @@ import { Router } from "express";
 
 export const router = Router();
 router.get("/", (req, res) => {
-  res.send("hello world from here");
+  console.log("let's goooooo let's go celtics 🍀🍀🍀🍀🍀🍀");
+  res.send("let's goooooo let's go celtics 🍀🍀🍀🍀🍀🍀");
 });
